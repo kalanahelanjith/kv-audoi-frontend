@@ -1,31 +1,50 @@
 
 import './App.css'
 import ProductCard from './components/productCard'
+import { BsGraphDown } from "react-icons/bs";
+import { FaRegBookmark } from "react-icons/fa";
+import { MdOutlineSpeaker } from "react-icons/md";
+import { FaRegUser } from "react-icons/fa";
+
 
 
 function App() {
   
 
   return (
-    <>
-    <ProductCard name="Audio Setup " price="4500/-" 
-    
-    description="hsdkjdskkd bhdbhbh bfhbdb"
+    <div className='w-full h-screen flex'>
 
-    photoUrl="https://img.drz.lazcdn.com/g/kf/S6cfb0ee8d9f74ebb9660fd04b3622e364.jpg_720x720q80.jpg_.webp"/>
-    
+      <div className='w-[400px] h-full bg-green-200'>
+        <button className='w-full h-[40px] text-[25px] font-bold  flex justify-center items-center'>
+        <BsGraphDown />
+        Dashboard
+        </button>
 
-    <ProductCard name="Jedel RGB Gaming Headset"
+        <button className='w-full h-[40px] text-[25px] font-bold flex justify-center items-center'>
+        <FaRegBookmark />
+          Bookings
+        </button>
 
-    price="3450/-"
+        <button className='w-full h-[40px] text-[25px] font-bold flex justify-center items-center'>
+        <MdOutlineSpeaker />
+          Items
+        </button>
 
-    description="Jedel RGB Gaming Headset High Bass Quality sound Headset with 6 months warranty"
+        <button className='w-full h-[40px] text-[25px] font-bold flex justify-center items-center'>
+        <FaRegUser />
+          Users
+        </button>
 
-    photoUrl="https://img.drz.lazcdn.com/static/lk/p/0113d6106130831c9b6b54a6a942fed9.png_720x720q80.png_.webp"/>
-    
+      </div>
+
+      <div className='w-full bg-red-500'>
+     
+
+      </div>
+
     
      
-    </>
+    </div>
   )
 }
 
