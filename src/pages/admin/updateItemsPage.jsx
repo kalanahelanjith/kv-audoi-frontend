@@ -1,15 +1,25 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-export default function AddItemPage() {
-  const [ProductKey, setProductKey] = useState("");
-  const [ProductName, setProductName] = useState("");
-  const [ProductPrice, setProductPrice] = useState(0);
-  const [ProductCategory, setProductCategory] = useState("audio");
-  const [ProductDimensions, setProductDimensions] = useState("");
-  const [ProductDescription, setProductDescription] = useState("");
+export default function UpdateItemPage() {
+  const location = useLocation();
+
+  console.log(location);
+
+  const [ProductKey, setProductKey] = useState(location.state.key);
+  const [ProductName, setProductName] = useState(location.state.name);
+  const [ProductPrice, setProductPrice] = useState(location.state.price);
+  const [ProductCategory, setProductCategory] = useState(
+    location.state.category
+  );
+  const [ProductDimensions, setProductDimensions] = useState(
+    location.state.dimensions
+  );
+  const [ProductDescription, setProductDescription] = useState(
+    location.state.description
+  );
   const navigate = useNavigate();
 
   async function handleAddItem() {
@@ -25,10 +35,9 @@ export default function AddItemPage() {
 
     if (token) {
       try {
-        const result = await axios.post(
-          "http://localhost:3000/api/products",
+        const result = await axios.put(
+          "http://localhost:3000/api/products/" + ProductKey,
           {
-            key: ProductKey,
             name: ProductName,
             price: ProductPrice,
             category: ProductCategory,
@@ -40,7 +49,7 @@ export default function AddItemPage() {
           }
         );
         toast.success(result.data.message);
-        navigate("/admin/items")
+        navigate("/admin/items");
       } catch (err) {
         toast.error(err.response.data.error);
       }
@@ -51,10 +60,11 @@ export default function AddItemPage() {
 
   return (
     <div className="w-full h-full flex flex-col items-center p-4">
-      <h1 className="text-2xl font-bold mb-4">Add Item</h1>
+      <h1 className="text-2xl font-bold mb-4">Update Item</h1>
 
       <div className="w-[400px] border p-4 flex flex-col items-center gap-2 rounded-lg shadow-md">
         <input
+          disabled
           onChange={(e) => setProductKey(e.target.value)}
           value={ProductKey}
           type="text"
@@ -101,9 +111,14 @@ export default function AddItemPage() {
           onClick={handleAddItem}
           className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
-          Add
+          Update Item
         </button>
-        <button onClick={()=>{navigate("/admin/items")}} className="w-full p-2 bg-red-500 text-white rounded hover:bg-red-600">
+        <button
+          onClick={() => {
+            navigate("/admin/items");
+          }}
+          className="w-full p-2 bg-red-500 text-white rounded hover:bg-red-600"
+        >
           Cancle
         </button>
       </div>
