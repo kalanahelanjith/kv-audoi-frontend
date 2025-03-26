@@ -10,9 +10,9 @@ export default function ProductCard({ item }) {
                 <p className={`mt-2 text-sm font-medium ${item.availability ? 'text-green-600' : 'text-red-600'}`}>
                     {item.availability ? 'In Stock' : 'Out of Stock'}
                 </p>
-                <button className="mt-4 w-[90%] flex justify-end  h-[40px] bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition absolute mx-auto bottom-3">
-                    Add to Cart
-                </button>
+                <Link to={"/product/"+item.key} className="text-center mt-4 w-[90%] flex justify-end  h-[40px] bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition absolute mx-auto bottom-3">
+                    View Details
+                </Link>
             </div>
         </div>
     );

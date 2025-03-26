@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import mediaUpload from "../../utils/mediaUpload";
 
 export default function AddItemPage() {
   const [ProductKey, setProductKey] = useState("");
@@ -10,9 +11,26 @@ export default function AddItemPage() {
   const [ProductCategory, setProductCategory] = useState("audio");
   const [ProductDimensions, setProductDimensions] = useState("");
   const [ProductDescription, setProductDescription] = useState("");
+  const [productImages , setProductImages] = useState([])
   const navigate = useNavigate();
 
   async function handleAddItem() {
+
+
+    const promises = []
+
+    for (let i = 0; i<productImages.length; i++){
+      console.log(productImages[i])
+      const Promise = mediaUpload(productImages[i])
+      promises.push(Promise)
+      if(i == 5){
+        toast.error("You can only upload 5 images at a time");
+        break;
+      }
+    }
+    
+
+
     console.log(
       ProductKey,
       ProductName,
@@ -24,7 +42,14 @@ export default function AddItemPage() {
     const token = localStorage.getItem("token");
 
     if (token) {
+  
       try {
+            Promise.all(promises).then((result)=>{
+      console.log(result)
+    }).catch((err)=>{
+      toast.error(err)
+    })
+    const imageUrls = await Promise.all(promises)
         const result = await axios.post(
           `${import.meta.env.VITE_BACKEND_URL}/api/products`,
           {
@@ -34,6 +59,7 @@ export default function AddItemPage() {
             category: ProductCategory,
             dimensions: ProductDimensions,
             description: ProductDescription,
+            image : imageUrls,
           },
           {
             headers: { Authorization: "Bearer " + token },
@@ -97,6 +123,8 @@ export default function AddItemPage() {
           placeholder="Product Description"
           className="w-full p-2 border rounded"
         />
+        <input type="file" multiple onChange={(e)=>{setProductImages(e.target.files)}} className="w-full p-2 border rounded"/>
+
         <button
           onClick={handleAddItem}
           className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"

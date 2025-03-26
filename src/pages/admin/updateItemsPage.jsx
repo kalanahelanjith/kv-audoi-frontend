@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
+import mediaUpload from "../../utils/mediaUpload";
 
 export default function UpdateItemPage() {
   const location = useLocation();
@@ -20,9 +21,24 @@ export default function UpdateItemPage() {
   const [ProductDescription, setProductDescription] = useState(
     location.state.description
   );
+  const [productImages, setProductImages]= useState([]);
   const navigate = useNavigate();
 
-  async function handleAddItem() {
+  async function handleUpdateItem() {
+
+    let UpdatingImages = location.state.image
+
+    if(productImages.length > 0) {
+      const promises = []
+
+      for (let i = 0; i<productImages.length; i++){
+        console.log(productImages[i])
+        const Promise = mediaUpload(productImages[i])
+        promises.push(Promise)
+        
+      } 
+      const UpdatingImages = await Promise.all(promises)                    
+    }
     console.log(
       ProductKey,
       ProductName,
@@ -43,6 +59,7 @@ export default function UpdateItemPage() {
             category: ProductCategory,
             dimensions: ProductDimensions,
             description: ProductDescription,
+            image : UpdatingImages
           },
           {
             headers: { Authorization: "Bearer " + token },
@@ -107,8 +124,10 @@ export default function UpdateItemPage() {
           placeholder="Product Description"
           className="w-full p-2 border rounded"
         />
+        <input type="file" multiple onChange={(e)=>{setProductImages(e.target.files)}} className="w-full p-2 border rounded"/>
+
         <button
-          onClick={handleAddItem}
+          onClick={handleUpdateItem}
           className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           Update Item
